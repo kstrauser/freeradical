@@ -3,3 +3,6 @@ dhparams:
 
 firstrun:
 	ansible-playbook -i hosts first_run.yml
+
+install:
+	ansible-playbook -i hosts install_mastodon.yml

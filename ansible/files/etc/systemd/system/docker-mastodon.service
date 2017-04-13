@@ -1,0 +1,12 @@
+[Unit]
+Description=Mastodon server
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/local/bin/docker-compose -f /var/lib/mastodon/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /var/lib/mastodon/docker-compose.yml down
+
+[Install]
+WantedBy=default.target
