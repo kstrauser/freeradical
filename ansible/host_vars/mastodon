@@ -1,0 +1,13 @@
+---
+# The DNS name of the server to configure
+ansible_host: mastodon.example.taco
+# This is the user you'll be SSHing to the server as, e.g. you.
+admin_username: me
+# This is that user's real name. You'll probably never see this value again.
+admin_realname: "Me Jones"
+# This is the admin user's password. We'll set it up in first_run.yml.
+ansible_become_pass: "< change this >"
+# Yeah, you'll want to run Ansible commands as root, not as yourself.
+ansible_become: true
+# Name of the SSD block storage device attached to the server
+block_device_name: "< change this; something like 'volume-sfo1-03'>"
