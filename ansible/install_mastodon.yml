@@ -109,6 +109,11 @@
         force: yes
         state: link
 
+    - name: Delete the built-in Nginx default
+      file:
+        dest: /etc/nginx/sites-enabled/default
+        state: absent
+
     - name: Reload the Nginx service
       systemd:
         name: nginx
@@ -122,6 +127,12 @@
         src: /etc/nginx/sites-available/mastodon.conf-80_and_443
         dest: /etc/nginx/sites-available/mastodon.conf
         force: yes
+        state: link
+
+    - name: Install the safe default file
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
         state: link
 
     - name: Reload the Nginx service
