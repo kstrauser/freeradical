@@ -1,4 +1,6 @@
-# Mastodon adminstration helpers
+# Free Radical Mastodon adminstration stuff
+
+These are the moving parts that go into hosting the [Free Radical](https://freeradical.zone/) Mastodon instance.
 
 ## Ansible
 
