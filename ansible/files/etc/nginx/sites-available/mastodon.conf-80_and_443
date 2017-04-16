@@ -32,6 +32,8 @@ server {
 
 	root /var/www/mastodon;
 
+	client_max_body_size 8m;
+
 	location / {
 		try_files $uri @proxy;
 	}
