@@ -24,6 +24,7 @@
         - docker.io
         - make
         - nginx
+        - ntp
         - postgresql-9.5
         - redis-server
 
