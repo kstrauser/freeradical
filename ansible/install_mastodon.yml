@@ -152,3 +152,11 @@
         minute: "0"
         hour: "22"
         job: make -f {{ mastodon_private }}/Makefile cron
+
+    - name: Configure certbot cron job
+      cron:
+        name: Certificate renewal maintenance
+        minute: "47"
+        hour: "1"
+        weekday: "0"
+        job: '/usr/bin/certbot renew --post-hook "/usr/sbin/service nginx reload"'
