@@ -27,7 +27,9 @@ server {
 	access_log /var/log/nginx/example.taco-access.log;
 	error_log /var/log/nginx/example.taco-error.log;
 
+	add_header Content-Security-Policy "default-src: https: 'unsafe-inline'";
 	add_header Heartbleed "NO; see http://heartbleedheader.com";
+	add_header Referrer-Policy "strict-origin-when-cross-origin";
 	add_header Strict-Transport-Security "max-age=15552000; includeSubDomains; preload";
 
 	root /var/www/mastodon;
