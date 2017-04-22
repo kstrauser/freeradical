@@ -14,13 +14,45 @@
     mastodon_version: v1.1.1
     # Your site's domain name
     mastodon_domain: example.taco
+    # Where PostgreSQL lives
+    pg_dir: /var/lib/postgresql
     
   tasks:
+    - name: Format the block device
+      filesystem:
+        dev: "{{ block_device_file }}"
+        fstype: ext4
+      when: block_device_file is defined
+
+    - name: Make the PostgreSQL directory
+      file:
+        path: "{{ pg_dir }}"
+        state: directory
+
+    - name: Mount the PostgreSQL data volume
+      mount:
+        fstype: ext4
+        opts: defaults,nofail,discard
+        src: "{{ block_device_file }}"
+        name: "{{ pg_dir }}"
+        state: mounted
+      when: block_device_file is defined
+
+    - name: Add certbot repo
+      apt_repository:
+        repo: ppa:certbot/certbot
+
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
     - name: Install required packages
       apt:
         name: "{{ item }}"
         state: present
       with_items:
+        - certbot
         - docker.io
         - make
         - nginx
@@ -28,21 +60,19 @@
         - postgresql-9.5
         - redis-server
 
-    - name: Add certbot repo
-      apt_repository:
-        repo: ppa:certbot/certbot
-
-    - name: Install certbot
-      apt:
-        name: certbot
-        state: present
-        update_cache: yes
-
     - name: Install newer docker-compose than is in the Ubuntu repo
       get_url:
         url: https://github.com/docker/compose/releases/download/1.11.2/docker-compose-Linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: 0755
+
+    - name: Create user "mastodon"
+      user:
+        name: mastodon
+        state: present
+        comment: "Mastodon"
+        generate_ssh_key: yes
+        ssh_key_comment: "mastodon@{{ ansible_host }}"
 
     - name: Make the Mastodon directory
       file:

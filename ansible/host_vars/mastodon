@@ -12,4 +12,4 @@ ansible_become_pass: "< change this >"
 # This is the (different!) user who will own all the mastodon files.
 mastodon_user: mastodon
 # Name of the SSD block storage device attached to the server.
-block_device_name: "< change this; something like 'volume-sfo1-03'>"
+block_device_file: "< change this; something like '/dev/disk/by-id/scsi-0DO_Volume_volume-sfo1-03'>"
