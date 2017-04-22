@@ -6,26 +6,26 @@ map $http_upgrade $connection_upgrade {
 server {
 	listen 80;
 	listen [::]:80;
-	server_name example.taco;
+	server_name {{ mastodon_domain }};
 	add_header Heartbleed "NO; see http://heartbleedheader.com";
-	access_log /var/log/nginx/example.taco-access.log;
-	error_log /var/log/nginx/example.taco-error.log;
+	access_log /var/log/nginx/{{ mastodon_domain }}-access.log;
+	error_log /var/log/nginx/{{ mastodon_domain }}-error.log;
 
 	location / {
-		return 301 https://example.taco$request_uri;
+		return 301 https://{{ mastodon_domain }}$request_uri;
 	}
 }
 
 server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
-	server_name example.taco;
+	server_name {{ mastodon_domain }};
 
-	ssl_certificate /etc/letsencrypt/live/example.taco/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/example.taco/privkey.pem;
+	ssl_certificate /etc/letsencrypt/live/{{ mastodon_domain }}/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/{{ mastodon_domain }}/privkey.pem;
 
-	access_log /var/log/nginx/example.taco-access.log;
-	error_log /var/log/nginx/example.taco-error.log;
+	access_log /var/log/nginx/{{ mastodon_domain }}-access.log;
+	error_log /var/log/nginx/{{ mastodon_domain }}-error.log;
 
 	add_header Content-Security-Policy "default-src: https: 'unsafe-inline'";
 	add_header Heartbleed "NO; see http://heartbleedheader.com";

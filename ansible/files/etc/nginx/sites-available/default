@@ -10,8 +10,8 @@ server {
         listen [::]:443 ssl default;
         server_name _;
 
-        ssl_certificate /etc/letsencrypt/live/example.taco/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/example.taco/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/{{ mastodon_domain }}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/{{ mastodon_domain }}/privkey.pem;
 
 	return 444;
 }

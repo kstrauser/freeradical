@@ -32,76 +32,86 @@
         state: mounted
       when: block_device_file is defined
 
-    # - name: Add certbot repo
-    #   apt_repository:
-    #     repo: ppa:certbot/certbot
+    - name: Add certbot repo
+      apt_repository:
+        repo: ppa:certbot/certbot
 
-    # - name: Update all packages
-    #   apt:
-    #     update_cache: yes
-    #     upgrade: dist
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: dist
 
-    # - name: Install required packages
-    #   apt:
-    #     name: "{{ item }}"
-    #     state: present
-    #   with_items:
-    #     - certbot
-    #     - docker.io
-    #     - make
-    #     - nginx
-    #     - ntp
-    #     - postgresql-9.5
-    #     - redis-server
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - certbot
+        - docker.io
+        - make
+        - nginx
+        - ntp
+        - postgresql-9.5
+        - redis-server
 
-    # - name: Install newer docker-compose than is in the Ubuntu repo
-    #   get_url:
-    #     url: https://github.com/docker/compose/releases/download/1.11.2/docker-compose-Linux-x86_64
-    #     dest: /usr/local/bin/docker-compose
-    #     mode: 0755
+    - name: Install newer docker-compose than is in the Ubuntu repo
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.11.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 0755
 
-    # - name: Create user "mastodon"
-    #   user:
-    #     name: mastodon
-    #     state: present
-    #     comment: "Mastodon"
-    #     generate_ssh_key: yes
-    #     ssh_key_comment: "mastodon@{{ ansible_host }}"
+    - name: Create user "mastodon"
+      user:
+        name: mastodon
+        state: present
+        comment: "Mastodon"
+        generate_ssh_key: yes
+        ssh_key_comment: "mastodon@{{ ansible_host }}"
 
-    # - name: Make the Mastodon directory
-    #   file:
-    #     path: "{{ mastodon_private }}"
-    #     state: directory
-    #     owner: "{{ mastodon_user }}"
-    #     group: "{{ mastodon_user }}"
+    - name: Make the Mastodon directory
+      file:
+        path: "{{ mastodon_private }}"
+        state: directory
+        owner: "{{ mastodon_user }}"
+        group: "{{ mastodon_user }}"
 
-    # - name: Clone the git repo
-    #   become: true
-    #   become_user: "{{ mastodon_user }}"
-    #   git:
-    #     dest: "{{ mastodon_private }}"
-    #     repo: "{{ mastodon_repo }}"
-    #     version: "{{ mastodon_version }}"
+    - name: Clone the git repo
+      become: true
+      become_user: "{{ mastodon_user }}"
+      git:
+        dest: "{{ mastodon_private }}"
+        repo: "{{ mastodon_repo }}"
+        version: "{{ mastodon_version }}"
 
-    # - name: Make the assets directory
-    #   file:
-    #     path: "{{ mastodon_public }}/assets"
-    #     state: directory
+    - name: Make the assets directory
+      file:
+        path: "{{ mastodon_public }}/assets"
+        state: directory
         
-    # - name: Make the system directory
-    #   file:
-    #     path: "{{ mastodon_public }}/system"
-    #     state: directory
+    - name: Make the system directory
+      file:
+        path: "{{ mastodon_public }}/system"
+        state: directory
 
-    # - name: Build Mastodon
-    #   shell: docker-compose build
-    #   args:
-    #     chdir: "{{ mastodon_private }}"
+    - name: Build Mastodon
+      shell: docker-compose build
+      args:
+        chdir: "{{ mastodon_private }}"
 
-    # - name: Copy /etc files
-    #   copy:
-    #     src: files/etc/
-    #     dest: /etc/
+    - name: Copy /etc files
+      copy:
+        src: files/etc/
+        dest: /etc/
+
+    - name: Copy templated files
+      template:
+        backup: yes
+        src: files/{{ item }}
+        dest: /{{ item }}
+      with_items:
+        - etc/nginx/sites-available/default
+        - etc/nginx/sites-available/mastodon.conf-80_and_443
+        - etc/nginx/sites-available/mastodon.conf-80only
 
     # - name: Check if Mastodon is configured
     #   stat:

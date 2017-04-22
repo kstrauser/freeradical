@@ -6,10 +6,10 @@ map $http_upgrade $connection_upgrade {
 server {
 	listen 80;
 	listen [::]:80;
-	server_name example.taco;
+	server_name {{ mastodon_domain }};
 	add_header Heartbleed "NO; see http://heartbleedheader.com";
-	access_log /var/log/nginx/example.taco-access.log;
-	error_log /var/log/nginx/example.taco-error.log;
+	access_log /var/log/nginx/{{ mastodon_domain }}-access.log;
+	error_log /var/log/nginx/{{ mastodon_domain }}-error.log;
 
         root /var/www/mastodon;
 }
