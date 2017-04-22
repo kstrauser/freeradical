@@ -100,10 +100,10 @@
         chdir: "{{ mastodon_private }}"
       when: git_clone.changed
 
-    - name: Copy /etc files
+    - name: Copy verbatim files
       copy:
-        src: files/as-is/etc/
-        dest: /etc/
+        src: files/as-is/
+        dest: /
 
     - name: Copy templated files
       template:
