@@ -113,84 +113,90 @@
         - etc/nginx/sites-available/mastodon.conf-80_and_443
         - etc/nginx/sites-available/mastodon.conf-80only
 
-    # - name: Check if Mastodon is configured
-    #   stat:
-    #     path: "{{ mastodon_private }}/.env.production"
-    #   register: prod_config
+    - name: Link the new Nginx default
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        force: yes
+        state: link
 
-    # - name: Run DB migrations
-    #   when: prod_config.stat.exists
-    #   shell: docker-compose run --rm web rails db:migrate
-    #   args:
-    #     path: "{{ mastodon_private }}"
+    - name: Check if Mastodon is configured
+      stat:
+        path: "{{ mastodon_private }}/.env.production"
+      register: prod_config
+
+    - name: Run DB migrations
+      when: prod_config.stat.exists
+      shell: docker-compose run --rm web rails db:migrate
+      args:
+        chdir: "{{ mastodon_private }}"
       
-    # - name: Compile assets
-    #   when: prod_config.stat.exists
-    #   shell: docker-compose run --rm web rails assets:precompile
-    #   args:
-    #     path: "{{ mastodon_private }}"
+    - name: Compile assets
+      when: prod_config.stat.exists
+      shell: docker-compose run --rm web rails assets:precompile
+      args:
+        chdir: "{{ mastodon_private }}"
       
-    # - name: Start the Mastodon service
-    #   when: prod_config.stat.exists
-    #   systemd:
-    #     name: docker-mastodon
-    #     state: started
-    #     enabled: yes
+    - name: Start the Mastodon service
+      when: prod_config.stat.exists
+      systemd:
+        name: docker-mastodon
+        state: started
+        enabled: yes
 
-    # - name: "Install the minimal Nginx config to bootstrap Let's Encrypt"
-    #   file:
-    #     src: /etc/nginx/sites-available/mastodon.conf-80only
-    #     dest: /etc/nginx/sites-available/mastodon.conf
-    #     force: yes
-    #     state: link
+    - name: "Check if Let's Encrypt is configured"
+      stat:
+        path: /etc/letsencrypt/live/{{ mastodon_domain }}
+      register: letsencrypt_config
 
-    # - name: Delete the built-in Nginx default
-    #   file:
-    #     dest: /etc/nginx/sites-enabled/default
-    #     state: absent
+    - name: "Install the minimal Nginx config to bootstrap Let's Encrypt"
+      file:
+        src: /etc/nginx/sites-available/mastodon.conf-80only
+        dest: /etc/nginx/sites-available/mastodon.conf
+        force: yes
+        state: link
+      when: not letsencrypt_config.stat.exists
 
-    # - name: Reload the Nginx service
-    #   systemd:
-    #     name: nginx
-    #     state: reloaded
+    - name: Reload the Nginx service
+      systemd:
+        name: nginx
+        state: reloaded
+      when: not letsencrypt_config.stat.exists
 
-    # - name: "Generate Let's Encrypt certificate"
-    #   shell: certbot certonly --webroot -d {{ mastodon_domain }} -w {{ mastodon_public }}
+    - name: "Generate Let's Encrypt certificate"
+      shell: certbot certonly --webroot -d {{ mastodon_domain }} -w {{ mastodon_public }}
+      when: not letsencrypt_config.stat.exists
 
-    # - name: Install the full Nginx config
-    #   file:
-    #     src: /etc/nginx/sites-available/mastodon.conf-80_and_443
-    #     dest: /etc/nginx/sites-available/mastodon.conf
-    #     force: yes
-    #     state: link
+    - name: Install the full Nginx config
+      file:
+        src: /etc/nginx/sites-available/mastodon.conf-80_and_443
+        dest: /etc/nginx/sites-enabled/mastodon.conf
+        force: yes
+        state: link
+      register: installed_prod_config
 
-    # - name: Install the safe default file
-    #   file:
-    #     src: /etc/nginx/sites-available/default
-    #     dest: /etc/nginx/sites-enabled/default
-    #     state: link
+    - name: Reload the Nginx service
+      systemd:
+        name: nginx
+        state: reloaded
+      when: installed_prod_config.changed
 
-    # - name: Reload the Nginx service
-    #   systemd:
-    #     name: nginx
-    #     state: reloaded
+    - name: Install helper Makefile
+      copy:
+        src: files/Makefile
+        dest: "{{ mastodon_private }}/Makefile"
 
-    # - name: Install helper Makefile
-    #   copy:
-    #     src: files/Makefile
-    #     dest: "{{ mastodon_private }}/Makefile"
+    - name: Configure maintenance cron job
+      cron:
+        name: Mastodon maintenance
+        minute: "0"
+        hour: "22"
+        job: make -f {{ mastodon_private }}/Makefile cron
 
-    # - name: Configure maintenance cron job
-    #   cron:
-    #     name: Mastodon maintenance
-    #     minute: "0"
-    #     hour: "22"
-    #     job: make -f {{ mastodon_private }}/Makefile cron
-
-    # - name: Configure certbot cron job
-    #   cron:
-    #     name: Certificate renewal maintenance
-    #     minute: "47"
-    #     hour: "1"
-    #     weekday: "0"
-    #     job: '/usr/bin/certbot renew --post-hook "/usr/sbin/service nginx reload"'
+    - name: Configure certbot cron job
+      cron:
+        name: Certificate renewal maintenance
+        minute: "47"
+        hour: "1"
+        weekday: "0"
+        job: '/usr/bin/certbot renew --post-hook "/usr/sbin/service nginx reload"'
