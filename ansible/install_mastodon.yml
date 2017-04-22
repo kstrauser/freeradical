@@ -60,13 +60,13 @@
         dest: /usr/local/bin/docker-compose
         mode: 0755
 
-    - name: Create user "mastodon"
+    - name: Create the mastodon user
       user:
-        name: mastodon
+        name: "{{ mastodon_user }}"
         state: present
         comment: "Mastodon"
         generate_ssh_key: yes
-        ssh_key_comment: "mastodon@{{ ansible_host }}"
+        ssh_key_comment: "{{ mastodon_user }}@{{ ansible_host }}"
 
     - name: Make the Mastodon directory
       file:
