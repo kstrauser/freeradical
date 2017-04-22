@@ -17,7 +17,6 @@
         state: present
       with_items:
         python-minimal
-        zsh
 
     - name: Create the admin user
       user:
@@ -25,7 +24,6 @@
         state: present
         comment: "{{ admin_realname }}"
         password: "{{ ansible_become_pass | password_hash('sha512') }}"
-        shell: /bin/zsh
         append: yes
         groups:
           sudo
@@ -43,32 +41,6 @@
         user: "{{ admin_username }}"
         state: present
         key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-
-    - name: Install .vimrc
-      copy:
-        src: ~/.vimrc
-        dest: ~/.vimrc
-        owner: "{{ admin_username }}"
-        group: "{{ admin_username }}"
-
-    - name: Install antigen
-      git:
-        dest: /home/{{ admin_username }}/antigen
-        repo: https://github.com/zsh-users/antigen.git
-
-    - name: Set antigen attributes
-      file:
-        path: /home/{{ admin_username }}/antigen
-        owner: "{{ admin_username }}"
-        group: "{{ admin_username }}"
-        recurse: yes
-
-    - name: Install .zshrc
-      copy:
-        src: ~/.zshrc
-        dest: /home/{{ admin_username }}/.zshrc
-        owner: "{{ admin_username }}"
-        group: "{{ admin_username }}"
 
     - name: Format the volume
       shell: mkfs.ext4 -F {{ device_file }}
