@@ -14,6 +14,9 @@ admin_realname: "Me Jones"
 # This is the admin user's password. We'll set it up in first_run.yml.
 ansible_become_pass: "< change this >"
 
+# This is the (different!) user who will own all the mastodon files.
+mastodon_user: mastodon
+
 # Name of the SSD block storage device attached to the server.
 # If this is set, it will be formatted and mounted to store your PostgreSQL data.
 # block_device_file: /dev/disk/by-id/scsi-0DO_Volume_volume-sfo1-23
