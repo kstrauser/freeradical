@@ -102,13 +102,13 @@
 
     - name: Copy /etc files
       copy:
-        src: files/etc/
+        src: files/as-is/etc/
         dest: /etc/
 
     - name: Copy templated files
       template:
         backup: yes
-        src: files/{{ item }}
+        src: files/templates/{{ item }}
         dest: /{{ item }}
       with_items:
         - etc/nginx/sites-available/default
@@ -185,7 +185,7 @@
 
     - name: Install helper Makefile
       copy:
-        src: files/Makefile
+        src: files/mastodon/Makefile
         dest: "{{ mastodon_private }}/Makefile"
 
     - name: Configure maintenance cron job
