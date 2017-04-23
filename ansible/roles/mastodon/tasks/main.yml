@@ -1,0 +1,76 @@
+---
+- name: Install docker, make, and Redis
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - docker.io
+    - make
+    - redis-server
+
+- name: Install newer docker-compose than is in the Ubuntu repo
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.11.2/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+
+- name: Create the mastodon user
+  user:
+    name: "{{ mastodon_user }}"
+    state: present
+    comment: "Mastodon"
+    generate_ssh_key: yes
+    ssh_key_comment: "{{ mastodon_user }}@{{ ansible_host }}"
+
+- name: Make the Mastodon directory
+  file:
+    path: "{{ mastodon_private }}"
+    state: directory
+    owner: "{{ mastodon_user }}"
+    group: "{{ mastodon_user }}"
+
+- name: Clone the git repo
+  become: true
+  become_user: "{{ mastodon_user }}"
+  git:
+    dest: "{{ mastodon_private }}"
+    repo: "{{ mastodon_repo }}"
+    version: "{{ mastodon_version }}"
+  register: git_clone
+
+- name: Make the assets directory
+  file:
+    path: "{{ mastodon_public }}/assets"
+    state: directory
+    
+- name: Make the system directory
+  file:
+    path: "{{ mastodon_public }}/system"
+    state: directory
+
+- name: Build Mastodon
+  shell: docker-compose build
+  args:
+    chdir: "{{ mastodon_private }}"
+  when: git_clone.changed
+
+- name: Check if Mastodon is configured
+  stat:
+    path: "{{ mastodon_private }}/.env.production"
+  register: prod_config
+
+- include: configure.yml
+  when: prod_config.stat.exists
+  
+- name: Install helper Makefile
+  copy:
+    src: Makefile
+    dest: "{{ mastodon_private }}/Makefile"
+
+- name: Configure maintenance cron job
+  cron:
+    name: Mastodon maintenance
+    minute: "0"
+    hour: "22"
+    job: make -f {{ mastodon_private }}/Makefile cron
+
