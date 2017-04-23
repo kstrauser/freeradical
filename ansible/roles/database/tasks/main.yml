@@ -38,3 +38,14 @@
     name: postgresql
     state: restarted
   when: postgresql_config.changed
+
+# This is so sketch, but PostgreSQL can try to start before Docker and
+# not be able to bind to its interface. When that happens, PostgreSQL
+# exits. This tries to start it again after 10 seconds. Nothing like
+# good ol' determinism!
+- name: Set PostgreSQL to start a few seconds after reboot
+  cron:
+    name: Start PostgreSQL after Docker settles
+    special_time: reboot
+    job: sleep 10 && /usr/sbin/service postgresql start
+
