@@ -10,28 +10,11 @@
     mastodon_public: /var/www/mastodon
     # Where PostgreSQL lives
     pg_dir: /var/lib/postgresql
+
+  roles:
+    - database
     
   tasks:
-    - name: Format the block device
-      filesystem:
-        dev: "{{ block_device_file }}"
-        fstype: ext4
-      when: block_device_file is defined
-
-    - name: Make the PostgreSQL directory
-      file:
-        path: "{{ pg_dir }}"
-        state: directory
-
-    - name: Mount the PostgreSQL data volume
-      mount:
-        fstype: ext4
-        opts: defaults,nofail,discard
-        src: "{{ block_device_file }}"
-        name: "{{ pg_dir }}"
-        state: mounted
-      when: block_device_file is defined
-
     - name: Add certbot repo
       apt_repository:
         repo: ppa:certbot/certbot
@@ -51,7 +34,6 @@
         - make
         - nginx
         - ntp
-        - postgresql-9.5
         - redis-server
 
     - name: Install newer docker-compose than is in the Ubuntu repo
