@@ -115,13 +115,6 @@
         - etc/nginx/sites-available/mastodon.conf-80_and_443
         - etc/nginx/sites-available/mastodon.conf-80only
 
-    - name: Link the new Nginx default
-      file:
-        src: /etc/nginx/sites-available/default
-        dest: /etc/nginx/sites-enabled/default
-        force: yes
-        state: link
-
     - name: Check if Mastodon is configured
       stat:
         path: "{{ mastodon_private }}/.env.production"
@@ -154,9 +147,15 @@
     - name: "Install the minimal Nginx config to bootstrap Let's Encrypt"
       file:
         src: /etc/nginx/sites-available/mastodon.conf-80only
-        dest: /etc/nginx/sites-available/mastodon.conf
+        dest: /etc/nginx/sites-enabled/mastodon.conf
         force: yes
         state: link
+      when: not letsencrypt_config.stat.exists
+
+    - name: Remove the default Nginx config on bootstrap run
+      file:
+        dest: /etc/nginx/sites-enabled/default
+        state: absent
       when: not letsencrypt_config.stat.exists
 
     - name: Reload the Nginx service
@@ -176,6 +175,13 @@
         force: yes
         state: link
       register: installed_prod_config
+
+    - name: Link the new Nginx default
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        force: yes
+        state: link
 
     - name: Reload the Nginx service
       systemd:
