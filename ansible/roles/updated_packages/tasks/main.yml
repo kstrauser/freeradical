@@ -1,0 +1,10 @@
+---
+- name: Update all packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install NTP
+  apt:
+    name: ntp
+    state: present

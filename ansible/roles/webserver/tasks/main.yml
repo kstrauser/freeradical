@@ -17,6 +17,11 @@
     src: local.conf
     dest: /etc/nginx/conf.d/local.conf
 
+- name: Install dhparams.pem
+  copy:
+    src: dhparams.pem
+    dest: /etc/nginx/dhparams.pem
+
 - name: Copy server definitions
   template:
     src: "{{ item }}"

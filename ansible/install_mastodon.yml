@@ -2,21 +2,9 @@
 - hosts: mastodon
 
   roles:
+    - updated_packages
     - database
+    - redis
     - letsencrypt
     - mastodon
-    - redis
     - webserver
-    
-  tasks:
-    - name: Update all packages
-      apt:
-        update_cache: yes
-        upgrade: dist
-
-    - name: Install required packages
-      apt:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - ntp
