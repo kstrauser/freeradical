@@ -1,12 +1,11 @@
 ---
-- name: Install docker, make, and Redis
+- name: Install docker and make
   apt:
     name: "{{ item }}"
     state: present
   with_items:
     - docker.io
     - make
-    - redis-server
 
 - name: Install newer docker-compose than is in the Ubuntu repo
   get_url:
