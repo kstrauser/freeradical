@@ -26,7 +26,7 @@
 
 - name: Configure PostgreSQL
   file:
-    src:
+    src: "{{ item }}"
     dest: /etc/postgresql/9.5/main/{{ item }}
   with_items:
     - pg_hba.conf

@@ -1,0 +1,28 @@
+---
+- name: Add Certbot repo
+  apt_repository:
+    repo: ppa:certbot/certbot
+
+- name: Install Certbot and Nginx
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - certbot
+    - nginx
+
+- name: Check if Certbot is configured
+  stat:
+    path: /etc/letsencrypt/live/{{ mastodon_domain }}
+  register: letsencrypt_config
+
+- include: doit.yml
+  when: not letsencrypt_config.stat.exists
+
+- name: Configure certbot cron job
+  cron:
+    name: Certificate renewal maintenance
+    minute: "47"
+    hour: "1"
+    weekday: "0"
+    job: '/usr/bin/certbot renew --post-hook "/usr/sbin/service nginx reload"'

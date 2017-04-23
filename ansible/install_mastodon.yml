@@ -13,12 +13,9 @@
 
   roles:
     - database
+    - letsencrypt
     
   tasks:
-    - name: Add certbot repo
-      apt_repository:
-        repo: ppa:certbot/certbot
-
     - name: Update all packages
       apt:
         update_cache: yes
@@ -29,7 +26,6 @@
         name: "{{ item }}"
         state: present
       with_items:
-        - certbot
         - docker.io
         - make
         - nginx
@@ -121,33 +117,12 @@
         state: started
         enabled: yes
 
-    - name: "Check if Let's Encrypt is configured"
-      stat:
-        path: /etc/letsencrypt/live/{{ mastodon_domain }}
-      register: letsencrypt_config
-
     - name: "Install the minimal Nginx config to bootstrap Let's Encrypt"
       file:
         src: /etc/nginx/sites-available/mastodon.conf-80only
         dest: /etc/nginx/sites-enabled/mastodon.conf
         force: yes
         state: link
-      when: not letsencrypt_config.stat.exists
-
-    - name: Remove the default Nginx config on bootstrap run
-      file:
-        dest: /etc/nginx/sites-enabled/default
-        state: absent
-      when: not letsencrypt_config.stat.exists
-
-    - name: Reload the Nginx service
-      systemd:
-        name: nginx
-        state: reloaded
-      when: not letsencrypt_config.stat.exists
-
-    - name: "Generate Let's Encrypt certificate"
-      shell: certbot certonly --webroot -d {{ mastodon_domain }} -w {{ mastodon_public }}
       when: not letsencrypt_config.stat.exists
 
     - name: Install the full Nginx config
@@ -183,10 +158,3 @@
         hour: "22"
         job: make -f {{ mastodon_private }}/Makefile cron
 
-    - name: Configure certbot cron job
-      cron:
-        name: Certificate renewal maintenance
-        minute: "47"
-        hour: "1"
-        weekday: "0"
-        job: '/usr/bin/certbot renew --post-hook "/usr/sbin/service nginx reload"'

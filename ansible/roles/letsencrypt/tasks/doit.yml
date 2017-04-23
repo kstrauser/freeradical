@@ -1,0 +1,36 @@
+---
+- name: Move Nginx config out of the way of Certbot
+  file:
+    dest: /etc/nginx/sites-enabled
+    state: absent
+
+- name: Create empty Nginx sites-enabled
+  file:
+    dest: /etc/nginx/sites-enabled
+    state: directory
+
+- name: Install bootstrap Nginx config for Certbot
+  template:
+    src: certbot.j2
+    dest: /etc/nginx/sites-enabled/certbot
+
+- name: Reload the Nginx service pre-certbot
+  systemd:
+    name: nginx
+    state: reloaded
+
+- name: Register Certbot
+  command: certbot register -m {{ certbot_email }} --agree-tos
+
+- name: "Generate Let's Encrypt certificate"
+  command: certbot certonly --webroot -d {{ mastodon_domain }} -w {{ mastodon_public }}
+
+- name: Remove bootstrap Nginx config for Certbot
+  file:
+    dest: /etc/nginx/sites-enabled/certbot
+    state: absent
+
+- name: Reload the Nginx service post-certbot
+  systemd:
+    name: nginx
+    state: reloaded
