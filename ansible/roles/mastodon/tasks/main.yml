@@ -58,13 +58,18 @@
     path: "{{ mastodon_private }}/.env.production"
   register: prod_config
 
-- include: configure.yml
-  when: prod_config.stat.exists
-  
 - name: Install helper Makefile
   copy:
     src: Makefile
     dest: "{{ mastodon_private }}/Makefile"
+
+- name: Install Mastodon service config
+  copy:
+    src: docker-mastodon.service
+    dest: /etc/systemd/system/docker-mastodon.service
+    
+- include: configure.yml
+  when: prod_config.stat.exists
 
 - name: Configure maintenance cron job
   cron:

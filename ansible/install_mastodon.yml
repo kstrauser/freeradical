@@ -5,6 +5,7 @@
     - database
     - letsencrypt
     - mastodon
+    - redis
     
   tasks:
     - name: Update all packages
