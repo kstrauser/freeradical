@@ -6,6 +6,7 @@
     - letsencrypt
     - mastodon
     - redis
+    - webserver
     
   tasks:
     - name: Update all packages
@@ -18,41 +19,4 @@
         name: "{{ item }}"
         state: present
       with_items:
-        - nginx
         - ntp
-
-    - name: Copy verbatim files
-      copy:
-        src: files/as-is/
-        dest: /
-
-    - name: Copy templated files
-      template:
-        backup: yes
-        src: files/templates/{{ item }}
-        dest: /{{ item }}
-      with_items:
-        - etc/nginx/sites-available/default
-        - etc/nginx/sites-available/mastodon.conf-80_and_443
-        - etc/nginx/sites-available/mastodon.conf-80only
-
-    - name: Install the full Nginx config
-      file:
-        src: /etc/nginx/sites-available/mastodon.conf-80_and_443
-        dest: /etc/nginx/sites-enabled/mastodon.conf
-        force: yes
-        state: link
-      register: installed_prod_config
-
-    - name: Link the new Nginx default
-      file:
-        src: /etc/nginx/sites-available/default
-        dest: /etc/nginx/sites-enabled/default
-        force: yes
-        state: link
-
-    - name: Reload the Nginx service
-      systemd:
-        name: nginx
-        state: reloaded
-      when: installed_prod_config.changed
