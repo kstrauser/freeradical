@@ -14,8 +14,6 @@ The playbooks configure a Ubuntu 16.04 server. It may be compatible with newer v
 
 `first_run.yml` assumes you can SSH into your server as root using publickey authentication. This is normal on Digital Ocean when you create a new server.
 
-`first_run.yml` requires that Python 2.7 is already installed on your server. This is the one package Ansible can't install itself.
-
 ### Preparing to run
 
 1. Edit `host_vars/mastodon` to suit.
@@ -24,7 +22,7 @@ The playbooks configure a Ubuntu 16.04 server. It may be compatible with newer v
 
 Once you're ready:
 
-1. Run `make firstrun`. This creates an admin user and disables SSH as root.
+1. Run `make firstrun`. This installs Python, creates an admin user, and disables SSH as root.
 1. Run `make dhparams` to generate your own `dhparams.pem` file. This makes SSL happy. It also takes ages.
 1. Run `make install` to do All The Things:
     - Installs required packages and configures them

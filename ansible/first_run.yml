@@ -1,8 +1,14 @@
 ---
 - hosts: mastodon
+  gather_facts: False
   user: root
 
   tasks:
+    - name: Install Python 2 if needed
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      register: install_python
+      changed_when: "'Setting up python' in install_python.stdout"
+
     - name: Create the admin user
       user:
         name: "{{ admin_username }}"
