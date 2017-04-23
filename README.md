@@ -23,7 +23,6 @@ The playbooks configure a Ubuntu 16.04 server. It may be compatible with newer v
 Once you're ready:
 
 1. Run `make firstrun`. This installs Python, creates an admin user, and disables SSH as root.
-1. Run `make dhparams` to generate your own `dhparams.pem` file. This makes SSL happy. It also takes ages.
 1. Run `make install` to do All The Things:
     - Installs required packages and configures them
     - Clones a Mastodon git repo

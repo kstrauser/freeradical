@@ -29,3 +29,6 @@ mastodon_version: v1.2.2
 
 # Your site's domain name.
 mastodon_domain: example.taco
+
+# Email address to register Certbot to
+certbot_email: admin@example.taco
