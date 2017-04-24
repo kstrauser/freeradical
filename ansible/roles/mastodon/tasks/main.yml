@@ -78,3 +78,13 @@
     hour: "22"
     job: make -f {{ mastodon_private }}/Makefile cron
 
+- name: Make the well-known directory
+  file:
+    path: "{{ mastodon_public }}/.well-known"
+    state: directory
+
+- name: Install the Do Not Track policy
+  copy:
+    src: dnt-policy.txt
+    dest: "{{ mastodon_public }}/.well-known/dnt-policy.txt"
+

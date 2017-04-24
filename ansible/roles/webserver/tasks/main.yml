@@ -51,3 +51,8 @@
     name: nginx
     state: reloaded
   when: "installed_prod_config.changed or installed_default_config.changed"
+
+- name: Only keep 7 days of Nginx logs
+  copy:
+    src: nginx
+    dest: /etc/logrotate.d/nginx
