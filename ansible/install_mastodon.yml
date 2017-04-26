@@ -2,7 +2,7 @@
 - hosts: mastodon
 
   roles:
-    - updated_packages
+    - base_packages
     - postgresql
     - redis
     - letsencrypt
