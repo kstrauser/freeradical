@@ -5,7 +5,7 @@
   register: dhparams_stat
 
 - name: Generate dhparams.pem
-  command: openssl dhparam -out {{ role_path }}/files/dhparams.pem 2048
+  command: openssl dhparam -out /etc/nginx/dhparams.pem 2048
   when: "not dhparams_stat.stat.exists"
 
 - name: Install Nginx
@@ -46,7 +46,7 @@
   systemd:
     name: nginx
     state: reloaded
-  when: "installed_prod_config.changed or installed_default_config.changed"
+  when: "installed_prod_config.changed or installed_default_config.changed or not dhparams_stat.stat.exists"
 
 - name: Only keep 7 days of Nginx logs
   copy:
