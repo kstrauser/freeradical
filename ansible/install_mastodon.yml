@@ -3,7 +3,7 @@
 
   roles:
     - updated_packages
-    - database
+    - postgresql
     - redis
     - letsencrypt
     - mastodon
