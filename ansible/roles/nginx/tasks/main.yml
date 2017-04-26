@@ -1,10 +1,11 @@
 ---
 - name: Looking for dhparams.pem
-  local_action: stat path="{{ role_path }}/files/dhparams.pem"
+  stat:
+    path: /etc/nginx/dhparams.pem
   register: dhparams_stat
 
-- name: Generating dhparams.pem
-  local_action: command openssl dhparam -out {{ role_path }}/files/dhparams.pem 2048
+- name: Generate dhparams.pem
+  command: openssl dhparam -out {{ role_path }}/files/dhparams.pem 2048
   when: "not dhparams_stat.stat.exists"
 
 - name: Install Nginx
@@ -16,11 +17,6 @@
   copy:
     src: local.conf
     dest: /etc/nginx/conf.d/local.conf
-
-- name: Install dhparams.pem
-  copy:
-    src: dhparams.pem
-    dest: /etc/nginx/dhparams.pem
 
 - name: Copy server definitions
   template:
