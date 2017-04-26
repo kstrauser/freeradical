@@ -1,0 +1,33 @@
+---
+- name: Install backup tools
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - s3cmd
+    - zstd
+
+- name: Copy the backup script
+  template:
+    src: mastodon-backup.sh.j2
+    dest: /usr/local/bin/mastodon-backup.sh
+    mode: 0755
+
+- name: Write the minimal s3cfg
+  template:
+    src: minimal-s3cfg.j2
+    dest: "{{ s3cfg_minimal }}"
+  register: minimal_cfg
+
+- name: Create the full s3cfg
+  shell: s3cmd --config {{ s3cfg_minimal }} --dump-config > {{ s3cfg }}
+  args:
+    creates: "{{ s3cfg }}"
+  when: minimal_cfg.changed
+
+- name: Configure backup cron job
+  cron:
+    name: Mastodon database backup
+    minute: 45
+    job: /usr/local/bin/mastodon-backup.sh
+    user: "{{ mastodon_user }}"

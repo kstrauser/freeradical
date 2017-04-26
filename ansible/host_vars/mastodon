@@ -32,3 +32,13 @@ mastodon_domain: example.taco
 
 # Email address to register Certbot to
 certbot_email: admin@example.taco
+
+# S3 bucket for backups
+# backup_s3_bucket: example-backup-bucket
+
+# Access key for backup S3 bucket
+# backup_s3_access_key: AKIASOMETHINGORANOTHER
+
+# Secret key for backup S3 bucket
+# backup_s3_secret_key: LoNgRaNdOmStRiNg
+
