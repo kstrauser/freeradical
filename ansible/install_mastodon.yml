@@ -7,5 +7,5 @@
     - redis
     - letsencrypt
     - mastodon
-    - webserver
+    - nginx
     - backup
