@@ -20,7 +20,7 @@
 
 - name: Copy server definitions
   template:
-    src: "{{ item }}"
+    src: "{{ item }}.j2"
     dest: /etc/nginx/sites-available/{{ item }}
   with_items:
     - default
