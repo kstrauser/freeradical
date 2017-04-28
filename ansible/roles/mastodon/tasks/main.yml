@@ -7,6 +7,13 @@
     - docker.io
     - make
 
+- name: Install docker-clean
+  get_url:
+    url: https://raw.githubusercontent.com/ZZROTDesign/docker-clean/v2.0.4/docker-clean
+    dest: /usr/local/bin/docker-clean
+    sha256sum: 7647330dd1f390009406e4dcd53b12a7e0870e36c36dba202968faea36235016
+    mode: 0755
+
 - name: Install newer docker-compose than is in the Ubuntu repo
   get_url:
     url: https://github.com/docker/compose/releases/download/1.11.2/docker-compose-Linux-x86_64
@@ -41,7 +48,7 @@
   file:
     path: "{{ mastodon_public }}/assets"
     state: directory
-    
+
 - name: Make the system directory
   file:
     path: "{{ mastodon_public }}/system"
@@ -67,7 +74,7 @@
   copy:
     src: docker-mastodon.service
     dest: /etc/systemd/system/docker-mastodon.service
-    
+
 - include: configure.yml
   when: prod_config.stat.exists
 
@@ -87,4 +94,3 @@
   copy:
     src: dnt-policy.txt
     dest: "{{ mastodon_public }}/.well-known/dnt-policy.txt"
-
