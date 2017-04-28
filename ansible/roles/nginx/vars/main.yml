@@ -1,0 +1,2 @@
+---
+media_s3_url: "{% if media_s3_hostname is defined %} https://{{ media_s3_hostname }}/{% endif %}"

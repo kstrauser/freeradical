@@ -42,3 +42,6 @@ certbot_email: admin@example.taco
 # Secret key for backup S3 bucket
 # backup_s3_secret_key: LoNgRaNdOmStRiNg
 
+# S3 hostname for hosting media. If set, this host is added to the
+# site's CSP headers for images and media.
+# media_s3_hostname: example-taco-system.s3-us-west-2.amazonaws.com
