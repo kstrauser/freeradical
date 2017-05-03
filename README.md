@@ -8,11 +8,15 @@ Use these [Ansible](https://www.ansible.com) playbooks to go from bare metal to 
 
 ### Before you start
 
-This is currently tailored for deployment to Digital Ocean, particularly the bit about mounting a block device, but will likely work for other VPS hosts.
-
 The playbooks configure a Ubuntu 16.04 server. It may be compatible with newer versions. They certainly won't be compatible with other distros, except perhaps Debian (which isn't tested).
 
 `first_run.yml` assumes you can SSH into your server as root using publickey authentication. This is normal on Digital Ocean when you create a new server.
+
+The playbook _will_ overwrite your Nginx and PostgreSQL configurations. If you have local customizations you need to keep, either comment out those parts of the `roles/*/tasks/main.yml` files, or update the files and templates to include your changes. If your changes are awesome and useful to others, please submit a pull request so we can all use them!
+
+If you're running `install_mastodon.yml` against an existing server, consider editing it to comment out all but the first role. Run that. When it's finished and you've made any necessary system tweaks, add one more role and repeat the process. That will keep the number of changes at one time to a manageable minimum.
+
+It's always a good idea to run `ansible-playbook --check ...` first to see what changes it would make _without actually making them_.
 
 ### Preparing to run
 
