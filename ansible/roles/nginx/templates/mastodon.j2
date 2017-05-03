@@ -59,7 +59,7 @@ server {
 		tcp_nodelay on;
 	}
 
-            location /api/v1/streaming {
+	location /api/v1/streaming {
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -73,7 +73,7 @@ server {
 		proxy_set_header Connection $connection_upgrade;
 
 		tcp_nodelay on;
-            }
+	}
 
 	error_page 500 501 502 503 504 /500.html;
 }
