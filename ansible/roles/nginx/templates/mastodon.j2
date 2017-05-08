@@ -1,6 +1,6 @@
 map $http_upgrade $connection_upgrade {
 	default upgrade;
-	''      close;
+	''	close;
 }
 
 server {
@@ -11,14 +11,15 @@ server {
 	access_log /var/log/nginx/{{ mastodon_domain }}-access.log;
 	error_log /var/log/nginx/{{ mastodon_domain }}-error.log;
 
+	location /.well-known/acme-challenge/ { allow all; }
 	location / {
 		return 301 https://{{ mastodon_domain }}$request_uri;
 	}
 }
 
 server {
-	listen 443 ssl;
-	listen [::]:443 ssl;
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
 	server_name {{ mastodon_domain }};
 
 	ssl_certificate /etc/letsencrypt/live/{{ mastodon_domain }}/fullchain.pem;
@@ -35,21 +36,41 @@ server {
 
 	root /var/www/mastodon;
 
-	client_max_body_size 8m;
+	# While upstream enables gzip, we don't:
+	#
+	# 1) Serving gzip'd content over SSL has been subject to
+	# interesting side-channel attacks that can reveal user
+	# information (see: http://www.breachattack.com).
+	#
+	# 2) We're marking most of the large assets as immutable, so those
+	# things will be (hypothetically) served one time ever and then
+	# cached.
+	#
+	# 3) The remaining content that will be updated regularly is
+	# mainly tiny snippets of text, aka toots. That's probably not
+	# worth the overhead of compressing.
+
+	client_max_body_size 0;
 
 	location / {
 		try_files $uri @proxy;
 	}
 
+	# /system/ stuff isn't relevant if you serve it from S3, but
+	# no harm in covering it in either case.
+	location ~ ^/(assets|system/media_attachments/files|system/accounts/avatars) {
+		add_header Cache-Control "public, max-age=31536000, immutable";
+	}
+
 	location @proxy {
-		proxy_set_header   Host      $http_host;
+		proxy_set_header   Host	     $http_host;
 		proxy_set_header   X-Real-IP $remote_addr;
 		proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header   X-Forwarded-Proto $scheme;
 
 		proxy_pass_header Server;
 
-		proxy_pass         http://localhost:3000;
+		proxy_pass	   http://localhost:3000;
 		proxy_buffering off;
 		proxy_redirect off;
 		proxy_http_version 1.1;
