@@ -25,7 +25,6 @@ We block some other instances. The full list is [on GitHub](https://github.com/k
 
 * No advertising or excessive promotion
 * No bots, unless they're cute, funny, or useful. Bots should avoid posting to the public timeline.
-* No pornography, nudity, or something that would be considered "NSFW" in a U.S. workplace, even behind a NSFW warning.
 * No gore or graphic violence
 * Content that is borderline NSFW or could be construed as NSFW at a glance should be put behind a CW (Content Warning)
 * No racism
@@ -35,7 +34,7 @@ We block some other instances. The full list is [on GitHub](https://github.com/k
 * No sexual depictions of children
 * No holocaust denialism, Nazi symbolism, promotion of National Socialism, or anything that is illegal in the European Union
 * No stalking or harassment
-* No fake accounts, even celebrity joke accounts. Note this rule does not necessarily apply to remote accounts.
+* No fake accounts unless they are clearly labeled as such
 
 ## Handling harassment
 
