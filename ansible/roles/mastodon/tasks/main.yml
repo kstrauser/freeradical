@@ -1,11 +1,12 @@
 ---
-- name: Install docker and make
+- name: Install make
   apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - docker.io
-    - make
+    name: make
+
+- name: "Remove Ubuntu's Docker"
+  apt:
+    name: docker.io
+    state: absent
 
 - name: Install docker-clean
   get_url:
@@ -13,6 +14,18 @@
     dest: /usr/local/bin/docker-clean
     sha256sum: 7647330dd1f390009406e4dcd53b12a7e0870e36c36dba202968faea36235016
     mode: 0755
+
+- name: Add the Docker CE key
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+
+- name: Add the Docker CE repo
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+
+- name: Install Docker CE
+  apt:
+    name: docker-ce
 
 - name: Install newer docker-compose than is in the Ubuntu repo
   get_url:
@@ -47,6 +60,11 @@
 - name: Make the assets directory
   file:
     path: "{{ mastodon_public }}/assets"
+    state: directory
+
+- name: Make the packs directory
+  file:
+    path: "{{ mastodon_public }}/packs"
     state: directory
 
 - name: Make the system directory
