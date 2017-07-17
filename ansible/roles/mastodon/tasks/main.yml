@@ -33,6 +33,16 @@
     dest: /usr/local/bin/docker-compose
     mode: 0755
 
+- name: Configure Docker
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+  register: docker_configured
+
+- name: Restart docker if needed
+  shell: service docker restart
+  when: docker_configured.changed
+
 - name: Create the mastodon user
   user:
     name: "{{ mastodon_user }}"
