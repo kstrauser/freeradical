@@ -10,6 +10,7 @@ server {
 	add_header Heartbleed "NO; see http://heartbleedheader.com";
 	access_log /var/log/nginx/{{ mastodon_domain }}-access.log;
 	error_log /var/log/nginx/{{ mastodon_domain }}-error.log;
+	root {{ mastodon_public }};
 
 	location /.well-known/acme-challenge/ { allow all; }
 	location / {
@@ -35,7 +36,7 @@ server {
 	add_header Strict-Transport-Security "max-age=15552000; includeSubDomains; preload";
 	add_header X-Clacks-Overhead "GNU Terry Pratchett";
 
-	root /var/www/mastodon;
+	root {{ mastodon_public }};
 
 	# While upstream enables gzip, we don't:
 	#
