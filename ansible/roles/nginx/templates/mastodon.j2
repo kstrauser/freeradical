@@ -58,6 +58,10 @@ server {
 		try_files $uri @proxy;
 	}
 
+	# Don't cache the sw.js service worker (as of v1.5.0)
+	location = /assets/sw.js {
+	}
+
 	# /system/ stuff isn't relevant if you serve it from S3, but
 	# no harm in covering it in either case.
 	location ~ ^/(assets|system/media_attachments/files|system/accounts/avatars) {
