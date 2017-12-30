@@ -2,6 +2,7 @@
 
 Free Radical currently blocks these instances:
 
-| Instance  | Severity | Reject media | Reason                                         |
-|-----------|----------|--------------|------------------------------------------------|
-| pawoo.net | silence  | yes          | Complaints about content in federated timeline |
+| Instance     | Severity | Reject media | Reason                                         |
+|--------------|----------|--------------|------------------------------------------------|
+| pawoo.net    | silence  | yes          | Complaints about content in federated timeline |
+| 2.distsn.org | suspend  |              | [Spamming](https://blog.freeradical.zone/suspending-domain-2-distsn-org/) |
