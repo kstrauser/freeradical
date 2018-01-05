@@ -16,7 +16,7 @@
     path: /etc/letsencrypt/live/{{ mastodon_domain }}
   register: letsencrypt_config
 
-- include: doit.yml
+- include_tasks: doit.yml
   when: not letsencrypt_config.stat.exists
 
 - name: Configure certbot cron job

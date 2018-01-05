@@ -1,3 +1,3 @@
 ---
-- include: doit.yml
+- include_tasks: doit.yml
   when: backup_s3_bucket is defined
