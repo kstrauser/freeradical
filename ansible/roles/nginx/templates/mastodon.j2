@@ -30,7 +30,7 @@ server {
 	error_log /var/log/nginx/{{ mastodon_domain }}-error.log;
 
 	# Ref: https://content-security-policy.com
-	add_header Content-Security-Policy "default-src 'self'; img-src 'self'{{ media_s3_url }} data:; style-src 'self' 'unsafe-inline'; connect-src 'self' wss://{{ mastodon_domain }}/; media-src 'self'{{ media_s3_url }}";
+	add_header Content-Security-Policy "default-src 'self'; img-src 'self'{{ media_s3_url_old }}{{ media_s3_url_new }} data:; style-src 'self' 'unsafe-inline'; connect-src 'self' wss://{{ mastodon_domain }}/; media-src 'self'{{ media_s3_url_old }}{{ media_s3_url_new }}";
 	add_header Heartbleed "NO; see http://heartbleedheader.com";
 	add_header Referrer-Policy "strict-origin-when-cross-origin";
 	add_header Strict-Transport-Security "max-age=15552000; includeSubDomains; preload";

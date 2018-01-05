@@ -1,2 +1,3 @@
 ---
-media_s3_url: "{% if media_s3_hostname is defined %} https://{{ media_s3_hostname }}/{% endif %}"
+media_s3_url_old: "{% if media_s3_bucket is defined %} https://{{ media_s3_bucket }}.{{ media_s3_hostname }}/{% endif %}"
+media_s3_url_new: "{% if media_s3_bucket is defined %} https://{{ media_s3_hostname }}/{{ media_s3_bucket }}/{% endif %}"
