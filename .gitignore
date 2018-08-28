@@ -1,2 +1,3 @@
 *.local
 *.retry
+.mypy_cache/
