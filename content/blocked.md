@@ -6,4 +6,5 @@ Free Radical currently blocks these instances:
 |--------------|----------|--------------|---------------------------------------------------|
 | 2.distsn.org | suspend  |              | [Spamming](https://blog.freeradical.zone/suspending-domain-2-distsn-org/) |
 | pawoo.net    | silence  | yes          | Complaints about content in federated timeline    |
+| pl.smuglo.li | silence  | yes          | Failure to respond to complaints                  |
 | switter.at   | silence  | yes          | Adult content which may be insufficiently flagged |
