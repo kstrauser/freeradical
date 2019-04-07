@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "freeradical"
+version = "0.1.0"
+description = "Stuff that runs the FreeRadical.zone Mastodon instance"
+authors = ["Kirk Strauser <kirk@strauser.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+ansible = "^2.7"
+click = "^7.0"
+requests = "^2.21"
+beautifulsoup4 = "^4.7"
+lxml = "^4.3"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.3"
+flake8 = "^3.7"
+mypy = "^0.700.0"
+black = "=19.3b0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
