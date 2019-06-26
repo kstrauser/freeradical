@@ -5,6 +5,7 @@ Free Radical currently blocks these instances:
 | Instance      | Severity | Reject media | Reason                                            |
 |---------------|----------|--------------|---------------------------------------------------|
 | 2.distsn.org  | suspend  |              | [Spamming](https://blog.freeradical.zone/suspending-domain-2-distsn-org/) |
+| anime.website | silence  | yes          | Uncensored NSFW content                           |
 | baraag.net    | silence  | yes          | Uncensored loli and shota porn, graphic violance, etc. |
 | humblr.social | silence  | yes          | Prodigious amounts of NSFW content^1              |
 | pawoo.net     | silence  | yes          | Complaints about content in federated timeline    |
