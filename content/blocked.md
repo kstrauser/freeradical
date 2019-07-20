@@ -19,6 +19,7 @@ Free Radical currently blocks these instances:
 | pl.smuglo.li        | silence  | yes          | Failure to respond to complaints                  |
 | sinblr.com          | silence  | yes          | Prodigious amounts of NSFW content^1              |
 | switter.at          | silence  | yes          | Adult content which may be insufficiently flagged |
+| weedis.life         | suspend  |              | Ghost ship overwhelmed by spam                    |
 
 ^1 This is purely [a practical matter](https://blog.freeradical.zone/silencing-humblr-social-and-sinblr-com/). These instances have been decent neighbors.
 ^2 I took a poll of local users, and the overwhelming response was that Free Radical residents wanted to preemptively defederate from Gab and its friends.
