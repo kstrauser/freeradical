@@ -1,9 +1,0 @@
----
-# Where you'd like to install Mastodon. If you change this, update
-# docker-mastodon.service and files/Makefile.
-mastodon_private: /var/lib/mastodon
-
-# Where you'd like to put the public Mastodon files. NOT THE SAME
-# AS mastodon_private!!! If you change this, update the Nginx
-# config files' "root" value to point to your new location.
-mastodon_public: /var/www/mastodon

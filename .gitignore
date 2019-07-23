@@ -1,5 +1,0 @@
-*.local
-*.retry
-.mypy_cache/
-.venv/
-.vscode/
